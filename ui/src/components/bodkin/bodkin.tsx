@@ -46,6 +46,14 @@ export function Bodkins() {
         setName(val)
     }
 
+    function handleNameKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+        if (event.key === 'Enter') {
+            createBodkin({id: 0, name: name});
+            setName('');
+            listBodkins()
+        }
+    }
+
     function handleListClicked(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
         event.preventDefault()
 
@@ -57,7 +65,9 @@ export function Bodkins() {
         event.preventDefault()
 
         createBodkin({id:0, name: name})
-            .catch(error => console.log(error))
+            .catch(error => console.log(error));
+        setName('')
+        listBodkins()
     }
 
     function createBodkin(bodkin: Bodkin): Promise<any> {
@@ -99,8 +109,6 @@ export function Bodkins() {
 
     return (
         <>
-            <p>Bodkins!</p>
-                
             <div>
                 <Button sx={{mt: 1}} onClick={handleListClicked}>List</Button>
                 <p>{bodkins.length} Bodkins:</p>
@@ -118,7 +126,9 @@ export function Bodkins() {
                         name="name"
                         type="string"
                         placeholder="name"
+                        value={name}
                         onChange={handleNameChanged}
+                        onKeyDown={handleNameKeyDown}
                     />
                 </FormControl>
                 <Button sx={{mt: 1}} onClick={handleCreateClicked}>Create</Button>
