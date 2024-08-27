@@ -1,0 +1,18 @@
+---
+networks:
+  infrastructure: {}
+  frontend: {}
+services:
+  webkins:
+    image: webkins:local
+    container_name: webkins
+    build:
+      context: ../../
+      dockerfile: build/docker/service.Dockerfile
+    ports:
+      - "8080:8080/tcp"
+    networks:
+      infrastructure: {}
+      frontend:
+        aliases:
+          - bodkins
