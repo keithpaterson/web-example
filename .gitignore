@@ -15,4 +15,10 @@ go.work
 bin/
 .idea/
 .vscode/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
