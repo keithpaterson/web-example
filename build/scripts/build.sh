@@ -14,15 +14,15 @@ _darwin_arch="amd64"
 _linux_arch="amd64"
 
 _show_usage() {
-  echo "build [service|ui|all]"
+  echo "build.sh [service|ui|all]"
   echo "   build the site, the ui, or both"
   echo "   for 'service' builds, add [-d] to build in a container"
   echo "   for 'ui' builds, add [-u] to update the ui container"
   echo
-  echo "build clean"
+  echo "build.sh clean"
   echo "   clean the bin folder"
   echo
-  echo "up|down"
+  echo "build.sh up|down"
   echo "   start/stop the service"
   echo
   echo "use --dry-run to check what will happen"
