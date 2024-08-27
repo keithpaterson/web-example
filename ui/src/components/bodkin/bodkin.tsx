@@ -1,5 +1,4 @@
 import {Button, FormControl, FormLabel, Input} from '@mui/joy';
-//import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import {useState} from "react";
@@ -42,7 +41,7 @@ export function Bodkins() {
 
     function handleNameChanged(event: React.FormEvent<HTMLInputElement>) {
         console.log(event)
-        let val:string = event.currentTarget.value;
+        const val:string = event.currentTarget.value;
         setName(val)
     }
 
@@ -70,7 +69,7 @@ export function Bodkins() {
         listBodkins()
     }
 
-    function createBodkin(bodkin: Bodkin): Promise<any> {
+    function createBodkin(bodkin: Bodkin): Promise<string> {
         return fetch('http://localhost:8080/bodkins', {
             method: 'POST',
             headers: {
@@ -80,7 +79,7 @@ export function Bodkins() {
         })
             .then((response) => response.json)
             .then((data) => {
-                return Promise.resolve(data)
+                return Promise.resolve(data.toString())
             })
             .catch((errors) => {
                 const error: Error = new Error(errors?.map((e: Error)  => e.message).join('\n') ?? 'unknown')
