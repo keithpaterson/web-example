@@ -101,13 +101,16 @@ export function Bodkins() {
         <>
             <p>Bodkins!</p>
                 
-            {bodkins.length > 0 && (<div>
-                <p>Current Bodkins:</p>
-                <table>
-                    <thead><tr>{getHeadings(bodkins)}</tr></thead>
-                    <tbody><tr>{getRows(bodkins)}</tr></tbody>
-                </table> 
-            </div>)}
+            <div>
+                <Button sx={{mt: 1}} onClick={handleListClicked}>List</Button>
+                <p>{bodkins.length} Bodkins:</p>
+                {bodkins.length > 0 && (<>
+                    <table>
+                        <thead><tr>{getHeadings(bodkins)}</tr></thead>
+                        <tbody>{getRows(bodkins)}</tbody>
+                    </table> 
+                </>)}
+            </div>
             <div>
                 <FormControl>
                     <FormLabel>Name:</FormLabel>
@@ -118,14 +121,7 @@ export function Bodkins() {
                         onChange={handleNameChanged}
                     />
                 </FormControl>
-                <Button sx={{mt: 1}} onClick={handleCreateClicked}>
-                    &nbsp;&nbsp;Create
-                </Button>
-            </div>
-            <div>
-                <Button sx={{mt: 1}} onClick={handleListClicked}>
-                    &nbsp;&nbsp;List (button)
-                </Button>
+                <Button sx={{mt: 1}} onClick={handleCreateClicked}>Create</Button>
             </div>
         </>
     )
