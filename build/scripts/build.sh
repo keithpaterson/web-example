@@ -54,12 +54,12 @@ _make_bin_folders() {
 }
 
 _update_ui_folders() {
-  docker image build -t site -f ${_build_dir}/docker/ui.Dockerfile ${_root_dir}
+  docker image build -t ui-update -f ${_build_dir}/docker/ui.Dockerfile ${_root_dir}
 
   for _o in ${_os}; do
     _arch=_${_o}_arch
     for _a in ${!_arch}; do
-      docker run --rm -v "${_bin_dir}/${_o}/${_a}/html":"/webkins_ui/mnt" ui
+      docker run --rm -v "${_bin_dir}/${_o}/${_a}/html":"/webkins_ui/mnt" ui-update
     done
   done
 }
@@ -113,7 +113,7 @@ build_ui() {
 exec_service() {
   # double-check
   [ -n "${_service_op}" ] || return 1
-  docker-compose -f ${_compose_dir}/service.yaml ${_service_op}
+  docker-compose -f ${_compose_dir}/service.yaml ${_service_op} $*
 }
 
 _service=
@@ -122,6 +122,7 @@ _ui=
 _ui_update=
 
 _service_op=
+_service_args=
 
 while [ $# -gt 0 ]; do
   case $1 in
@@ -148,6 +149,7 @@ while [ $# -gt 0 ]; do
       ;;
     up|start)
       _service_op=up
+      _service_args="-d"
       shift
       ;;
     down|stop)
@@ -177,6 +179,6 @@ done
 [ -n "${_service}" ] && build_service
 [ -n "${_ui}" ] && build_ui
 
-[ -n "${_service_op}" ] && exec_service
+[ -n "${_service_op}" ] && exec_service ${_service_args}
 
 exit 0
