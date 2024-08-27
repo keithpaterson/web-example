@@ -39,4 +39,4 @@ USER webkins
 COPY --from=builder /webkins/bin/linux/amd64/service /webkins/service
 COPY --from=uibuilder /webkins_ui/dist /webkins/html/
 
-ENTRYPOINT ["/webkins/server"]
+ENTRYPOINT ["/webkins/service"]

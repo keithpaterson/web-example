@@ -110,10 +110,18 @@ build_ui() {
   fi
 }
 
+exec_service() {
+  # double-check
+  [ -n "${_service_op}" ] || return 1
+  docker-compose -f ${_compose_dir}/service.yaml ${_service_op}
+}
+
 _service=
 _service_container=
 _ui=
 _ui_update=
+
+_service_op=
 
 while [ $# -gt 0 ]; do
   case $1 in
@@ -138,6 +146,14 @@ while [ $# -gt 0 ]; do
       _ui=true
       shift
       ;;
+    up|start)
+      _service_op=up
+      shift
+      ;;
+    down|stop)
+      _service_op=down
+      shift
+      ;;
     -u|update-ui)
       _ui_update=true
       shift
@@ -160,5 +176,7 @@ done
 
 [ -n "${_service}" ] && build_service
 [ -n "${_ui}" ] && build_ui
+
+[ -n "${_service_op}" ] && exec_service
 
 exit 0

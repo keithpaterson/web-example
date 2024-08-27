@@ -72,15 +72,6 @@ export function Bodkins() {
             .then((data) => {
                 return Promise.resolve(data)
             })
-            //.then((data) => {
-            //    console.log(data);
-            //    let actual:Bodkin = {id: data?.id, name: data?.name}
-            //    if (actual) {
-            //        console.log(actual);
-            //        return Promise.resolve(actual);
-            //    }
-            //    return Promise.reject(new Error('failed to create new bodkin with name "${bodkin.name}"'))
-            //})
             .catch((errors) => {
                 const error: Error = new Error(errors?.map((e: Error)  => e.message).join('\n') ?? 'unknown')
                 return Promise.reject(error);
@@ -89,7 +80,7 @@ export function Bodkins() {
       
     function listBodkins(): Promise<Bodkin[]> {
         return fetch('http://localhost:8080/bodkins', {
-            method: 'LIST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
             },
