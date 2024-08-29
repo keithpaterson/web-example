@@ -17,6 +17,8 @@ github.com/keithpaterson/resweave-utils v0.0.0-20240829184716-d9e08fa2662c h1:DT
 github.com/keithpaterson/resweave-utils v0.0.0-20240829184716-d9e08fa2662c/go.mod h1:C5UYKdeICg3MLBs2HOO9VFMgiOj8SUitSUhyW8/pnNI=
 github.com/keithpaterson/resweave-utils v0.0.0-20240829190457-5d0d3d341250 h1:u2wGhLiXCSlAbAi7F6M1uecg1AwsPMaWNwWWoyjbYrs=
 github.com/keithpaterson/resweave-utils v0.0.0-20240829190457-5d0d3d341250/go.mod h1:C5UYKdeICg3MLBs2HOO9VFMgiOj8SUitSUhyW8/pnNI=
+github.com/keithpaterson/resweave-utils v0.0.0-20240829195534-3363185f8f14 h1:sgwKKanCghx+mMeb6fNfF2R3O6PQML2ELmmZft0/dbk=
+github.com/keithpaterson/resweave-utils v0.0.0-20240829195534-3363185f8f14/go.mod h1:C5UYKdeICg3MLBs2HOO9VFMgiOj8SUitSUhyW8/pnNI=
 github.com/mortedecai/go-go-gadgets v0.2.2 h1:39hBdkfRSopKNxSE822HjgqLUiYoRby+2DYF6UKDkkY=
 github.com/mortedecai/go-go-gadgets v0.2.2/go.mod h1:vzA02yeVa96AupAgjq2u6RhiUKS1KQ1IeXaqY/Zijns=
 github.com/onsi/ginkgo/v2 v2.20.1 h1:YlVIbqct+ZmnEph770q9Q7NVAz4wwIiVNahee6JyUzo=

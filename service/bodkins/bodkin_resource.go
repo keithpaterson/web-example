@@ -2,9 +2,11 @@ package bodkins
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"sync"
 
+	"github.com/keithpaterson/resweave-utils/resource"
 	"github.com/keithpaterson/resweave-utils/response"
 	"github.com/keithpaterson/resweave-utils/utility/rw"
 
@@ -21,7 +23,7 @@ type Bodkin struct {
 }
 
 type BodkinResource struct {
-	resweave.APIResource
+	resweave.LogHolder
 
 	bodkins []Bodkin
 	nextID  int
@@ -29,37 +31,33 @@ type BodkinResource struct {
 }
 
 func AddResource(server resweave.Server) error {
-	res := newResource(resourceName)
+	res := resource.NewResource(resourceName, newBodkinResource(resourceName))
 	res.SetID(resweave.NumericID)
-	return server.AddResource(res)
+	return res.AddEasyResource(server)
 }
 
-func newResource(name resweave.ResourceName) *BodkinResource {
+func newBodkinResource(name resweave.ResourceName) *BodkinResource {
 	res := &BodkinResource{
-		APIResource: resweave.NewAPI(name),
-		bodkins:     make([]Bodkin, 0),
+		LogHolder: resweave.NewLogholder(name.String(), nil),
+		bodkins:   make([]Bodkin, 0),
 	}
-	res.SetList(res.list)
-	res.SetCreate(res.create)
 	return res
 }
 
-func (b *BodkinResource) list(_ context.Context, w http.ResponseWriter, req *http.Request) {
-	// skip validations (are there any?)
+func (b *BodkinResource) List(_ context.Context, writer response.Writer, req *http.Request) {
+	b.mtx.Lock()
+	defer b.mtx.Unlock()
 
-	writer := response.NewWriter(w)
-
-	writer.WriteJsonResponse(http.StatusOK, b.bodkins)
+	if err := writer.WriteJsonResponse(http.StatusOK, b.bodkins); err != nil {
+		b.Errorw("List", "response-write-error", fmt.Errorf("failed to write response body: %w", err))
+	}
 }
 
-func (b *BodkinResource) create(_ context.Context, w http.ResponseWriter, req *http.Request) {
-	// skip validations for now
-
-	writer := response.NewWriter(w)
-
+func (b *BodkinResource) Create(_ context.Context, writer response.Writer, req *http.Request) {
 	var data Bodkin
 	err := rw.UnmarshalJson(req.Body, &data)
 	if err != nil {
+		b.Errorw("Create", "body-error", fmt.Errorf("failed to parse request body: %w", err))
 		writer.WriteErrorResponse(http.StatusBadRequest, response.SvcErrorReadRequestFailed)
 	}
 
@@ -71,5 +69,7 @@ func (b *BodkinResource) create(_ context.Context, w http.ResponseWriter, req *h
 	b.nextID++
 
 	b.bodkins = append(b.bodkins, data)
-	writer.WriteJsonResponse(http.StatusOK, data)
+	if err := writer.WriteJsonResponse(http.StatusOK, data); err != nil {
+		b.Errorw("Create", "response-write-error", fmt.Errorf("failed to write response body: %w", err))
+	}
 }

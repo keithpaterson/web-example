@@ -17,8 +17,8 @@ _linux_arch="amd64"
 _show_usage() {
   echo "build.sh [service|ui|all]"
   echo "   build the site, the ui, or both"
-  echo "   for 'service' builds, add [-d] to build in a container"
-  echo "   for 'ui' builds, add [-u] to update the ui container"
+  echo "   for 'service' builds, add [container] to build in a container"
+  echo "   for 'ui' builds, add [update] to update the ui container"
   echo
   echo "build.sh clean"
   echo "   clean the bin folder"
@@ -206,10 +206,10 @@ while [ $# -gt 0 ]; do
     down|stop)
       _service_op=down
       ;;
-    -u|update-ui)
+    -u|update)
       _ui_update=true
       ;;
-    -d|--docker)
+    -d|--docker|container)
       _service_container=true
       ;;
     --dry-run)
