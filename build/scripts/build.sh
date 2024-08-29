@@ -4,6 +4,7 @@ _script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 _root_dir=$( cd -- "${_script_dir}/../.." &> /dev/null && pwd )
 _build_dir=${_root_dir}/build
 _deploy_dir=${_root_dir}/deploy
+_test_report_dir=${_root_dir}/.reports
 _compose_dir=${_deploy_dir}/docker-compose
 _service_dir=${_root_dir}/service
 _ui_dir=${_root_dir}/ui
@@ -114,6 +115,44 @@ build_ui() {
   fi
 }
 
+run_unit_tests() {
+  [ -n "${_coverage}" ] && _generate_coverage || _unit_tests
+}
+
+_unit_tests() {
+  echo "Running unit tests..."
+  mkdir -p ${_test_report_dir}
+  _test_check_and_install_ginkgo
+  ginkgo --tags testutils --repeat 1 -r --output-dir ${_test_report_dir} --json-report unit_tests.json ./... > ${_test_report_dir}/unit_tests.log 2>&1
+  local _result=$?
+  cat ${_test_report_dir}/unit_tests.log
+  if [ ${_result} -ne 0 ]; then
+      exit ${_result}
+  fi
+}
+
+_generate_coverage() {
+  echo "generating test coverage..."
+  mkdir -p ${_test_report_dir}
+  rm -f ${_test_report_dir}/coverage.raw.out ${_test_report_dir}/coverage.out
+  go test --tags testutils --test.coverprofile ${_test_report_dir}/coverage.raw.out ./... | grep -v mocks 
+  local _result=$?
+
+  # filter out mocks directories from coverage
+  grep -vE 'mocks/|utility/test/' ${_test_report_dir}/coverage.raw.out > ${_test_report_dir}/coverage.out
+  go tool cover -html=${_test_report_dir}/coverage.out -o ${_test_report_dir}/coverage.html
+  if [ ${_result} -ne 0 ]; then
+      exit ${_result}
+  fi
+}
+
+_test_check_and_install_ginkgo() {
+  if ! command -v ginkgo &> /dev/null; then
+    echo install ginkgo
+    go install github.com/onsi/ginkgo/v2/ginkgo
+  fi
+}
+
 exec_service() {
   # double-check
   [ -n "${_service_op}" ] || return 1
@@ -124,12 +163,17 @@ _service=
 _service_container=
 _ui=
 _ui_update=
+_unit_test=
+_coverage=
 
 _service_op=
 _service_args=
 
 while [ $# -gt 0 ]; do
-  case $1 in
+  _op=$1
+  shift
+
+  case ${_op} in
     -h|--help)
       _show_usage
       exit 1
@@ -140,33 +184,33 @@ while [ $# -gt 0 ]; do
       ;;
     service)
       _service=true
-      shift
       ;;
     ui)
       _ui=true
-      shift
+      ;;
+    test*|unit-test*)
+      _unit_test=true
+      ;;
+    coverage)
+      _unit_test=true
+      _coverage=true
       ;;
     all)
       _service=true
       _ui=true
-      shift
       ;;
     up|start)
       _service_op=up
       _service_args="-d"
-      shift
       ;;
     down|stop)
       _service_op=down
-      shift
       ;;
     -u|update-ui)
       _ui_update=true
-      shift
       ;;
     -d|--docker)
       _service_container=true
-      shift
       ;;
     --dry-run)
       _show_info
@@ -182,6 +226,7 @@ done
 
 [ -n "${_service}" ] && build_service
 [ -n "${_ui}" ] && build_ui
+[ -n "${_unit_test}" ] && run_unit_tests
 
 [ -n "${_service_op}" ] && exec_service ${_service_args}
 
