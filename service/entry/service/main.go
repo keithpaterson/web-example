@@ -9,8 +9,9 @@ import (
 	"go.uber.org/zap"
 
 	"webkins/service/bodkins"
-	"webkins/service/pkg/logging"
 	"webkins/ui"
+
+	"github.com/keithpaterson/resweave-utils/logging"
 )
 
 type ResourceGenerator func(s resweave.Server) error

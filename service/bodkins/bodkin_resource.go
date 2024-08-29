@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"sync"
 
-	"webkins/service/pkg/response"
-	"webkins/service/pkg/utility/rw"
+	"github.com/keithpaterson/resweave-utils/response"
+	"github.com/keithpaterson/resweave-utils/utility/rw"
 
 	"github.com/agilitree/resweave"
 )
