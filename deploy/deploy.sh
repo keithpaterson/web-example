@@ -32,13 +32,13 @@ _show_info() {
 deploy_service() {
   echo "deploy service"
 
-  kubectl service-info
+  kubectl cluster-info
 }
 
 deploy_ui() {
   echo "deploy UI"
 
-  kubectl service-info
+  kubectl cluster-info
 }
 
 _service=
