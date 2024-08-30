@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-_root_dir=$( cd -- "${_script_dir}/../.." &> /dev/null && pwd )
+_root_dir=$( cd -- "${_script_dir}/.." &> /dev/null && pwd )
 _build_dir=${_root_dir}/build
 _deploy_dir=${_root_dir}/deploy
 _test_report_dir=${_root_dir}/.reports
@@ -43,6 +43,7 @@ _show_info() {
   done
   echo
   [ -n "${_service}" ] && echo "build service"
+  [ -n "${_service_container}" ] && echo "      in a docker container"
   [ -n "${_ui}" ] && echo "build UI"
   [ -n "${_ui_update}" ] && echo "      and update the docker container"
   [ -n "${_service_op}" ] && echo "service operation: ${_service_op}"
