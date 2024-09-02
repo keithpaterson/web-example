@@ -10,12 +10,11 @@ _service_dir=${_root_dir}/service
 _ui_dir=${_root_dir}/ui
 
 _show_usage() {
-  echo "deploy.sh [service|ui|all]"
-  echo "   deploy the service, the ui, or both"
-  echo "   for 'service' builds, add [container] to build in a container"
-  echo "   for 'ui' builds, add [update] to update the ui container"
+  echo "deploy.sh [--remove]"
+  echo "   deploy the service"
   echo
-  echo "use --dry-run to check what will happen"
+  echo "   --remove:  remove the (deployed) service"
+  echo "   --dry-run: check what will happen but don't run anything"
 }
 
 _show_info() {
@@ -24,8 +23,7 @@ _show_info() {
   echo "Service  : ${_service_dir}"
   echo "UI       : ${_ui_dir}"
   echo
-  [ -n "${_service}" ] && echo "deploy service"
-  [ -n "${_ui}" ] && echo "deploy UI"
+  [ -n "${_remove}" ] && echo "remove service" || echo "deploy service"
   echo
 }
 
@@ -33,16 +31,16 @@ deploy_service() {
   echo "deploy service"
 
   kubectl cluster-info
+  #kubectl create deployment webkins-svc --image=webkins
+  kubectl apply -f ${_deploy_dir}/k8s/webkins.yaml
 }
 
-deploy_ui() {
-  echo "deploy UI"
-
-  kubectl cluster-info
+remove_service() {
+  echo "remove service"
+  kubectl delete -f ${_deploy_dir}/k8s/webkins.yaml
 }
 
-_service=
-_ui=
+_remove=
 
 while [ $# -gt 0 ]; do
   _op=$1
@@ -53,29 +51,28 @@ while [ $# -gt 0 ]; do
       _show_usage
       exit 1
       ;;
-    service)
-      _service=true
-      ;;
-    ui)
-      _ui=true
-      ;;
-    all)
-      _service=true
-      _ui=true
+    -r|--delete|--remove)
+      _remove=true
       ;;
     --dry-run)
       _show_info
       exit 0
       ;;
     *)
-      echo "ERROR: unexpected parameter '$1'"
+      echo "ERROR: unexpected parameter '$_op'"
       _show_usage
       exit 1
       ;;
   esac
 done
 
-[ -n "${_service}" ] && deploy_service
-[ -n "${_ui}" ] && deploy_ui
+if [ -n "${_remove}" ]; then
+  remove_service
+else
+  deploy_service
+fi
+
+echo
+echo Finished
 
 exit 0
