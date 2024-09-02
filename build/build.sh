@@ -18,7 +18,6 @@ _show_usage() {
   echo "build.sh [service|ui|all]"
   echo "   build the site, the ui, or both"
   echo "   for 'service' builds, add [container] to build in a container"
-  echo "   for 'ui' builds, add [update] to update the ui container"
   echo
   echo "build.sh clean"
   echo "   clean the bin folder"
@@ -45,7 +44,6 @@ _show_info() {
   [ -n "${_service}" ] && echo "build service"
   [ -n "${_service_container}" ] && echo "      in a docker container"
   [ -n "${_ui}" ] && echo "build UI"
-  [ -n "${_ui_update}" ] && echo "      and update the docker container"
   [ -n "${_service_op}" ] && echo "service operation: ${_service_op}"
   echo
 }
@@ -55,17 +53,6 @@ _make_bin_folders() {
     _arch=_${_o}_arch
     for _a in ${!_arch}; do
       mkdir -p ${_bin_dir}/${_o}/${_a}/$1
-    done
-  done
-}
-
-_update_ui_folders() {
-  docker image build -t ui-update -f ${_build_dir}/docker/ui.Dockerfile ${_root_dir}
-
-  for _o in ${_os}; do
-    _arch=_${_o}_arch
-    for _a in ${!_arch}; do
-      docker run --rm -v "${_bin_dir}/${_o}/${_a}/html":"/webkins_ui/mnt" ui-update
     done
   done
 }

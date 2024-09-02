@@ -4,7 +4,7 @@ networks:
   frontend: {}
 services:
   webkins:
-    image: webkins:local
+    image: webkins:1.0
     container_name: webkins
     build:
       context: ../../
