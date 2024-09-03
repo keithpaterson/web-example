@@ -70,7 +70,7 @@ export function Bodkins() {
     }
 
     function createBodkin(bodkin: Bodkin): Promise<string> {
-        return fetch('http://localhost:8080/bodkins', {
+        return fetch('http://localhost:32754/bodkins', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
@@ -88,7 +88,7 @@ export function Bodkins() {
     }
       
     function listBodkins(): Promise<Bodkin[]> {
-        return fetch('http://localhost:8080/bodkins', {
+        return fetch('http://localhost:32754/bodkins', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',

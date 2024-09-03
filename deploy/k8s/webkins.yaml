@@ -21,14 +21,32 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: wk-entry
-  namespace: default
+  name: wk-service
 spec:
-  type: NodePort
   selector:
     wk: web
   ports:
-    - port: 8080
-      targetPort: 8080
-      nodePort: 30001
+  - name: http
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wk-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "localhost"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: wk-service
+            port:
+              number: 8080
 
