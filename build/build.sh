@@ -193,7 +193,7 @@ _test_check_and_install_ginkgo() {
 exec_service() {
   # double-check
   [ -n "${_service_op}" ] || return 1
-  docker-compose -f ${_compose_dir}/service.yaml ${_service_op} $*
+  docker-compose -f ${_compose_dir}/service-${_ui_framework}.yaml ${_service_op} $*
 }
 
 _service=

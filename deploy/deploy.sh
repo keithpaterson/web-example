@@ -8,7 +8,7 @@ _test_report_dir=${_root_dir}/.reports
 _compose_dir=${_deploy_dir}/docker-compose
 _service_dir=${_root_dir}/service
 _ui_dir=${_root_dir}/ui
-_ui_framework=react
+_ui_framework=angular
 
 # used for remove-all, could be used to validate framework naming
 _all_frameworks="react angular"
