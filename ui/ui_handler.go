@@ -3,8 +3,8 @@ package ui
 import (
 	"errors"
 
-	"github.com/agilitree/resweave"
 	"github.com/mortedecai/go-go-gadgets/env"
+	"github.com/mortedecai/resweave"
 )
 
 var (

@@ -1,0 +1,8 @@
+<h2>Add a Bodkin</h2>
+
+<div>
+    <label for="name">Name: </label>
+    <input id="name" [(ngModel)]="bodkin.name" placeholder="name" (keyup.enter)="createBodkin()">
+
+    <button type="button" class="add-button" (click)="createBodkin()">Add Bodkin</button>
+</div>
