@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/agilitree/resweave"
+	"github.com/mortedecai/resweave"
 	"go.uber.org/zap"
 
 	"webkins/service/bodkins"
@@ -28,7 +28,7 @@ var (
 	}
 )
 
-//go:generate mockgen -destination=../../mocks/resweave_mocks.go -package=mocks github.com/agilitree/resweave Server
+//go:generate mockgen -destination=../../mocks/resweave_mocks.go -package=mocks github.com/mortedecai/resweave Server
 func main() {
 	fmt.Printf("Starting server and logging")
 

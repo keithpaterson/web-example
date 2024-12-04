@@ -10,7 +10,7 @@ import (
 	"github.com/keithpaterson/resweave-utils/response"
 	"github.com/keithpaterson/resweave-utils/utility/rw"
 
-	"github.com/agilitree/resweave"
+	"github.com/mortedecai/resweave"
 )
 
 const (
