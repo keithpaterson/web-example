@@ -8,8 +8,8 @@ import (
 	"github.com/mortedecai/resweave"
 	"go.uber.org/zap"
 
-	"webkins/service/bodkins"
-	"webkins/ui"
+	"github.com/keithpaterson/web-example/service/bodkins"
+	"github.com/keithpaterson/web-example/ui"
 
 	"github.com/keithpaterson/resweave-utils/logging"
 )

@@ -13,15 +13,6 @@ import (
 	"github.com/mortedecai/resweave"
 )
 
-const (
-	resourceName = "bodkins"
-)
-
-type Bodkin struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
-}
-
 type BodkinResource struct {
 	resweave.LogHolder
 
@@ -31,14 +22,14 @@ type BodkinResource struct {
 }
 
 func AddResource(server resweave.Server) error {
-	res := resource.NewResource(resourceName, newBodkinResource(resourceName))
+	res := resource.NewResource("bodkin", newBodkinResource())
 	res.SetID(resweave.NumericID)
 	return res.AddEasyResource(server)
 }
 
-func newBodkinResource(name resweave.ResourceName) *BodkinResource {
+func newBodkinResource() *BodkinResource {
 	res := &BodkinResource{
-		LogHolder: resweave.NewLogholder(name.String(), nil),
+		LogHolder: resweave.NewLogholder("bodkin", nil),
 		bodkins:   make([]Bodkin, 0),
 	}
 	return res
@@ -59,13 +50,14 @@ func (b *BodkinResource) Create(_ context.Context, writer response.Writer, req *
 	if err != nil {
 		b.Errorw("Create", "body-error", fmt.Errorf("failed to parse request body: %w", err))
 		writer.WriteErrorResponse(http.StatusBadRequest, response.SvcErrorReadRequestFailed)
+		return
 	}
 
 	b.mtx.Lock()
 	defer b.mtx.Unlock()
 
-	// ignore id in create and set it to the "next" one
-	data.Id = b.nextID
+	// ignore ID in create and set it to the "next" one
+	data.ID = b.nextID
 	b.nextID++
 
 	b.bodkins = append(b.bodkins, data)
