@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-webkins
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      wk: web
+  template:
+    metadata:
+      labels:
+        wk: web
+    spec:
+      containers:
+        - name: webkins-site
+          image: webkins-react:1.0
+          imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wk-service
+spec:
+  selector:
+    wk: web
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wk-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "localhost"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: wk-service
+            port:
+              number: 8080
+

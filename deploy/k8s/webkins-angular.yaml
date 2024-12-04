@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: webkins-site
-          image: webkins:1.0
+          image: webkins-angular:1.0
           imagePullPolicy: Never
 ---
 apiVersion: v1

@@ -4,11 +4,11 @@ networks:
   frontend: {}
 services:
   webkins:
-    image: webkins:1.0
+    image: webkins-react:1.0
     container_name: webkins
     build:
       context: ../../
-      dockerfile: build/docker/service.Dockerfile
+      dockerfile: build/docker/service-react.Dockerfile
     ports:
       - "8080:8080/tcp"
     networks:

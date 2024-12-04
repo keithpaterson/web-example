@@ -1,0 +1,18 @@
+---
+networks:
+  infrastructure: {}
+  frontend: {}
+services:
+  webkins:
+    image: webkins-angular:1.0
+    container_name: webkins
+    build:
+      context: ../../
+      dockerfile: build/docker/service-angular.Dockerfile
+    ports:
+      - "8080:8080/tcp"
+    networks:
+      infrastructure: {}
+      frontend:
+        aliases:
+          - bodkins

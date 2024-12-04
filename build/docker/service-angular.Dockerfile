@@ -1,6 +1,5 @@
 ARG GO_VERSION=1.22
 FROM golang:${GO_VERSION} AS builder
-ENV GOPRIVATE=github.com/agilitree
 ENV CGO_ENABLED=0
 ARG TOKEN=""
 
@@ -17,8 +16,8 @@ RUN mkdir -p -m 0700 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 RUN --mount=type=ssh mkdir -p -m 0700 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 RUN --mount=type=ssh if [ -n "$TOKEN" ]; then \
-      git config --global url."https://$TOKEN@github.com/".insteadOf "https://github.com/" ; \
-      else git config --global url."ssh://git@github.com/".insteadOf "https://github.com/"; echo "SSH";\
+        git config --global url."https://$TOKEN@github.com/".insteadOf "https://github.com/" ; \
+        else git config --global url."ssh://git@github.com/".insteadOf "https://github.com/"; echo "SSH";\
     fi
 
 RUN --mount=type=ssh go mod download && \
@@ -29,8 +28,16 @@ RUN --mount=type=ssh go mod download && \
 FROM node:20-alpine AS uibuilder
 
 WORKDIR /webkins_ui
-COPY ui/ /webkins_ui
-RUN npm install --ignore-scripts && npm run build
+COPY ui/angular /webkins_ui
+RUN npm install --ignore-scripts && npm install -g @angular/cli
+ENV _CONFIG=
+RUN if [ -n "$BUILD_CONFIG" ]; then \
+        echo "build with configuration = $BUILD_CONFIG"; \
+        ng build --configuration "$BUILD_CONFIG"; \
+    else \
+        echo "build with default configuration"; \
+        ng build; \
+    fi
 
 FROM scratch
 
@@ -38,6 +45,6 @@ COPY --from=builder /etc/passwd /etc/passwd
 WORKDIR /webkins
 USER webkins
 COPY --from=builder /webkins/bin/linux/amd64/service /webkins/service
-COPY --from=uibuilder /webkins_ui/dist /webkins/html/
+COPY --from=uibuilder /webkins_ui/dist/webkins/browser /webkins/html/
 
 ENTRYPOINT ["/webkins/service"]
